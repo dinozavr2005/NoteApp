@@ -21,7 +21,7 @@ class Styling {
         navigationBar.isTranslucent = true
         
         // foreground
-        navigationBar.tintColor = .orange
+        navigationBar.tintColor = .systemOrange
     }
 
     static func setToolbarColors(for navigationController: UINavigationController?) {
@@ -33,7 +33,7 @@ class Styling {
         toolbar.isTranslucent = true
         
         // foreground
-        toolbar.tintColor = .orange
+        toolbar.tintColor = .systemOrange
     }
     
     static func setGlobalBarButtonItemStyle() {

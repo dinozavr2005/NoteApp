@@ -13,17 +13,17 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>d</string>
 			<key>zero</key>
-			<string>%d Заметок</string>
+			<string>Нет заметок</string>
 			<key>one</key>
-			<string>%d Заметка</string>
+			<string>%d заметка</string>
 			<key>two</key>
-			<string>%d Заметки</string>
+			<string>%d заметки</string>
 			<key>few</key>
-			<string>%d Заметки</string>
+			<string>%d заметки</string>
 			<key>many</key>
-			<string>%d Заметок</string>
+			<string>%d заметок</string>
 			<key>other</key>
-			<string>%d Заметки</string>
+			<string>%d заметки</string>
 		</dict>
 	</dict>
 </dict>

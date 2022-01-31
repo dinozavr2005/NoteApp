@@ -11,13 +11,13 @@
         <!--Main View Controller-->
         <scene sceneID="qn2-pL-WQ0">
             <objects>
-                <tableViewController id="GR0-yS-U6h" customClass="MainViewController" customModule="HWSMilestone_8" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="GR0-yS-U6h" customClass="MainViewController" customModule="NotesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="1z6-6u-m9j">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Note" rowHeight="87" id="C6C-8c-s0W" customClass="NoteCell" customModule="HWSMilestone_8" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Note" rowHeight="87" id="C6C-8c-s0W" customClass="NoteCell" customModule="NotesApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="87"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" tableViewCell="C6C-8c-s0W" id="x7a-sK-TXk">
@@ -75,16 +75,14 @@
         <!--Editor View Controller-->
         <scene sceneID="P7N-FF-Eco">
             <objects>
-                <viewController storyboardIdentifier="DetailViewController" id="HkN-Rg-keE" customClass="EditorViewController" customModule="HWSMilestone_8" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailViewController" id="HkN-Rg-keE" customClass="EditorViewController" customModule="NotesApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yDy-fe-UQc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="EOs-mA-gkQ">
-                                <rect key="frame" x="20" y="44" width="383" height="818"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Placeholer" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="EOs-mA-gkQ">
+                                <rect key="frame" x="20" y="44" width="374" height="818"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -92,6 +90,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Qha-7m-lZv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="EOs-mA-gkQ" firstAttribute="top" secondItem="Qha-7m-lZv" secondAttribute="top" id="OCs-hJ-KvH"/>
+                            <constraint firstItem="EOs-mA-gkQ" firstAttribute="bottom" secondItem="Qha-7m-lZv" secondAttribute="bottom" id="jQH-4T-qYd"/>
+                            <constraint firstItem="EOs-mA-gkQ" firstAttribute="trailing" secondItem="yDy-fe-UQc" secondAttribute="trailingMargin" id="kq6-a6-re7"/>
+                            <constraint firstItem="EOs-mA-gkQ" firstAttribute="leading" secondItem="yDy-fe-UQc" secondAttribute="leadingMargin" id="vXr-PY-2vF"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="textView" destination="EOs-mA-gkQ" id="ycx-1d-R65"/>
@@ -99,7 +103,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5zc-x6-qQf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2925" y="13"/>
+            <point key="canvasLocation" x="2924.6376811594205" y="12.723214285714285"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="e6a-GI-0uD">

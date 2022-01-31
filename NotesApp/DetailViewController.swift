@@ -96,8 +96,6 @@ class EditorViewController: UIViewController {
     }
     
     @objc func deleteTapped() {
-        // the notes application does not ask for confirmation, but moves deleted notes to a "Recently deleted" folder
-        // folders are not implemented here, so a confirmation is asked instead
         
         let ac = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         ac.popoverPresentationController?.barButtonItem = deleteButton

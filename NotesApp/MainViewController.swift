@@ -7,13 +7,24 @@
 
 import UIKit
 
-class MainViewController: UITableViewController, EditorDelegate {
+class MainViewController: UITableViewController {
+    
     // MARK: - variables
     
     var notes = [Note]()
     
+    //search items
+    var filteredNotes: [Note] = []
+    let searchController = UISearchController()
+    var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    var isFiltering: Bool {
+        return searchController.isActive && !isSearchBarEmpty
+    }
+    
     var selectedCellView: UIView!
-
+    
     // navigation items
     var editButton: UIBarButtonItem!
     var cancelButton: UIBarButtonItem!
@@ -24,36 +35,40 @@ class MainViewController: UITableViewController, EditorDelegate {
     var newNoteButton: UIBarButtonItem!
     var deleteAllButton: UIBarButtonItem!
     var deleteButton: UIBarButtonItem!
-
+    
     // MARK: - init
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         title = "Заметки"
         navigationController?.navigationBar.prefersLargeTitles = true
         
         // navigationBar
         editButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(enterEditingMode))
-        cancelButton = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(cancelEditingMode))
+        cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelEditingMode))
         navigationItem.rightBarButtonItems = [editButton]
+        
+        navigationItem.searchController = searchController
+        searchController.searchResultsUpdater = self
+        
         Styling.setNavigationBarColors(for: navigationController)
-
+        
         // toolbar
         newNoteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNote))
         spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         notesCountButton = UIBarButtonItem(title: "\(notesCountUniversal(count: UInt(notes.count)))", style: .plain, target: nil, action: nil)
         notesCountButton.setTitleTextAttributes([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 11),
-            NSAttributedString.Key.foregroundColor : UIColor.darkText
-            ], for: .normal)
+            NSAttributedString.Key.foregroundColor : UIColor.systemGray
+        ], for: .normal)
         toolbarItems = [spacerButton, notesCountButton, spacerButton, newNoteButton]
         navigationController?.isToolbarHidden = false
         Styling.setToolbarColors(for: navigationController)
         
         deleteAllButton = UIBarButtonItem(title: "Удалить все", style: .plain, target: self, action: #selector(deleteAllTapped))
         deleteButton = UIBarButtonItem(title: "Удалить", style: .plain, target: self, action: #selector(deleteTapped))
-
+        
         // cell selection color
         selectedCellView = UIView()
         selectedCellView.backgroundColor = UIColor.orange.withAlphaComponent(0.2)
@@ -62,13 +77,21 @@ class MainViewController: UITableViewController, EditorDelegate {
         
         reloadDataFromStorage()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         sortNotes()
         updateData()
     }
-
+    
     // MARK: - utils
+    
+    func filterContentForSearchText(_ searchText: String) {
+        filteredNotes = notes.filter { (note: Note) -> Bool in
+            return note.text.lowercased().contains(searchText.lowercased())
+        }
+        
+        tableView.reloadData()
+    }
     
     //localization note count
     private func notesCountUniversal(count: UInt) -> String {
@@ -101,45 +124,56 @@ class MainViewController: UITableViewController, EditorDelegate {
     func updateNotesCount() {
         notesCountButton.title = "\(notesCountUniversal(count: UInt(notes.count)))"
     }
-
+    
     // MARK: - tableView
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFiltering {
+            return filteredNotes.count
+        }
         return notes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath)
-
+        
         if let cell = cell as? NoteCell {
-            let note = notes[indexPath.row]
+            //            let note = notes[indexPath.row]
+            let note: Note
+            if isFiltering {
+                note = filteredNotes[indexPath.row]
+            } else {
+                note = notes[indexPath.row]
+            }
             let split = note.text.split(separator: "\n", maxSplits: 2, omittingEmptySubsequences: true)
             
             cell.titleLabel.text = getTitleText(split: split)
             cell.subtitleLabel.text = getSubtitleText(split: split)
             cell.dateLabel.text = formatDate(from: note.modificationDate)
-
-
+            
+            
             setCellColors(for: cell)
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            notes.remove(at: indexPath.row)
-            
-            DispatchQueue.global().async { [weak self] in
-                if let notes = self?.notes {
-                    Storage.save(notes: notes)
-                }
+        if isFiltering == false {
+            if editingStyle == .delete {
+                notes.remove(at: indexPath.row)
                 
-                DispatchQueue.main.async {
-                    self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-                    self?.updateNotesCount()
+                DispatchQueue.global().async { [weak self] in
+                    if let notes = self?.notes {
+                        Storage.save(notes: notes)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        self?.updateNotesCount()
+                    }
                 }
             }
-        }
+        } 
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -215,12 +249,18 @@ class MainViewController: UITableViewController, EditorDelegate {
     
     func openDetailViewController(noteIndex: Int) {
         if let vc = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? EditorViewController {
-            vc.setParameters(notes: notes, noteIndex: noteIndex)
+            
+            if isFiltering {
+                vc.setParameters(notes: filteredNotes, noteIndex: noteIndex)
+            } else {
+                vc.setParameters(notes: notes, noteIndex: noteIndex)
+            }
+                //vc.setParameters(notes: notes, noteIndex: noteIndex)
             vc.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-
+    
     @objc func createNote() {
         notes.append(Note(text: "", modificationDate: Date()))
         DispatchQueue.global().async { [weak self] in
@@ -235,7 +275,7 @@ class MainViewController: UITableViewController, EditorDelegate {
     }
     
     // MARK: - tableView editing mode
-
+    
     @objc func enterEditingMode() {
         navigationItem.rightBarButtonItems = [cancelButton]
         toolbarItems = [spacerButton, deleteAllButton]
@@ -307,10 +347,22 @@ class MainViewController: UITableViewController, EditorDelegate {
             }
         }
     }
+}
 
-    // MARK: - editor delegate
-    
+// MARK: - editor delegate
+
+extension MainViewController: EditorDelegate {
     func editor(_ editor: EditorViewController, didUpdate notes: [Note]) {
         self.notes = notes
+    }
+}
+
+// MARK: - SearchController
+
+extension MainViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        filterContentForSearchText(searchBar.text!)
+
     }
 }
