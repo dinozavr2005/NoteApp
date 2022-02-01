@@ -67,8 +67,29 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="SkS-Bf-n6H"/>
+                    <connections>
+                        <outlet property="noItemsView" destination="5N4-1W-m7p" id="z32-1M-W8q"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vVf-EV-xeR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="5N4-1W-m7p">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="123"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Добавьте первую заметку..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mef-Xj-Omc" userLabel="baclLabel">
+                            <rect key="frame" x="9.5" y="51" width="221" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" systemColor="systemGrayColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="Gvs-cG-9la"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="mef-Xj-Omc" firstAttribute="centerX" secondItem="5N4-1W-m7p" secondAttribute="centerX" id="7hl-Au-bxH"/>
+                        <constraint firstItem="mef-Xj-Omc" firstAttribute="centerY" secondItem="5N4-1W-m7p" secondAttribute="centerY" id="Jmq-K7-e17"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="2166.666666666667" y="12.723214285714285"/>
         </scene>
@@ -139,6 +160,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -9,6 +9,10 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
+
+    @IBOutlet var noItemsView: UIView!
+    
+    
     // MARK: - variables
     
     var notes = [Note]()
@@ -40,9 +44,12 @@ class MainViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         title = "Заметки"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        // label at first launch
+        tableView.backgroundView = noItemsView
         
         // navigationBar
         editButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(enterEditingMode))
@@ -57,7 +64,7 @@ class MainViewController: UITableViewController {
         // toolbar
         newNoteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNote))
         spacerButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        notesCountButton = UIBarButtonItem(title: "\(notesCountUniversal(count: UInt(notes.count)))", style: .plain, target: nil, action: nil)
+        notesCountButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         notesCountButton.setTitleTextAttributes([
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: 11),
             NSAttributedString.Key.foregroundColor : UIColor.systemGray
@@ -138,7 +145,6 @@ class MainViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Note", for: indexPath)
         
         if let cell = cell as? NoteCell {
-            //            let note = notes[indexPath.row]
             let note: Note
             if isFiltering {
                 note = filteredNotes[indexPath.row]
@@ -155,25 +161,6 @@ class MainViewController: UITableViewController {
             setCellColors(for: cell)
         }
         return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if isFiltering == false {
-            if editingStyle == .delete {
-                notes.remove(at: indexPath.row)
-                
-                DispatchQueue.global().async { [weak self] in
-                    if let notes = self?.notes {
-                        Storage.save(notes: notes)
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-                        self?.updateNotesCount()
-                    }
-                }
-            }
-        } 
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -255,7 +242,6 @@ class MainViewController: UITableViewController {
             } else {
                 vc.setParameters(notes: notes, noteIndex: noteIndex)
             }
-                //vc.setParameters(notes: notes, noteIndex: noteIndex)
             vc.delegate = self
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -263,6 +249,7 @@ class MainViewController: UITableViewController {
     
     @objc func createNote() {
         notes.append(Note(text: "", modificationDate: Date()))
+        tableView.backgroundView?.isHidden = true
         DispatchQueue.global().async { [weak self] in
             if let notes = self?.notes {
                 Storage.save(notes: notes)
@@ -318,8 +305,6 @@ class MainViewController: UITableViewController {
     }
     
     @objc func deleteTapped() {
-        // the notes application does not ask for confirmation, but moves deleted notes to a "Recently deleted" folder
-        // folders are not implemented here, so a confirmation is asked instead
         let ac = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         ac.popoverPresentationController?.barButtonItem = deleteButton
         ac.addAction(UIAlertAction(title: "Удалить", style: .destructive, handler: { [weak self] _ in
@@ -349,7 +334,7 @@ class MainViewController: UITableViewController {
     }
 }
 
-// MARK: - editor delegate
+// MARK: - Editor delegate
 
 extension MainViewController: EditorDelegate {
     func editor(_ editor: EditorViewController, didUpdate notes: [Note]) {

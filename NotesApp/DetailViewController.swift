@@ -42,8 +42,6 @@ class EditorViewController: UIViewController {
         
         navigationItem.largeTitleDisplayMode = .never
         
-
-
         shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
         doneButton = UIBarButtonItem(title: "Готово", style: .plain, target: self, action: #selector(doneTapped))
         // done button is shown only when keyboard is displayed
@@ -70,6 +68,9 @@ class EditorViewController: UIViewController {
         
         // only case where it can be nil is if there are no remaining notes after a deletion
         guard noteIndex != nil else { return }
+        if textView.text == "" {
+            textView.text = "Новая заметка"
+        }
 
         saveNote()
     }
@@ -169,6 +170,7 @@ class EditorViewController: UIViewController {
         // save only if text has changed, or if it's a new note
         if textView.text != originalText || newNote {
             originalText = textView.text
+
             notes[noteIndex].text = textView.text
             notes[noteIndex].modificationDate = Date()
             
